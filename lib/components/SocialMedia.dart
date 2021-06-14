@@ -227,9 +227,12 @@ class _SocialMediaState extends State<SocialMedia> {
                     SizedBox(
                       height: 10,
                     ),
-                    Text(
-                      descpription,
-                      textAlign: TextAlign.center,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: Text(
+                        descpription,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                     SizedBox(
                       height: 5,

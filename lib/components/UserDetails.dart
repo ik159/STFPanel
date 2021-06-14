@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UserDetailsClass {
   UserDetailsClass({
@@ -72,46 +73,54 @@ class _UserDetailsState extends State<UserDetails> {
     //return postsdata = response["data"];
   }
 
-  Card detailCard(IconData icon, Color x1, Color x2, String text) {
-    return Card(
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(20.0),
+  GestureDetector detailCard(IconData icon, Color x1, Color x2, String text) {
+    return GestureDetector(
+      onTap: () async{
+        String pos = icon == Icons.phone ? "1": "0";
+        if(pos=="1"){
+          await launch("tel:" + text);
+        }
+      },
+      child: Card(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(20.0),
+          ),
         ),
-      ),
-      // shadowColor: Colors.grey.shade300,
-      elevation: 5.0,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ShaderMask(
-              shaderCallback: (Rect bounds) {
-                return LinearGradient(
-                  colors: <Color>[
-                    x1,
-                    x2,
-                  ],
-                ).createShader(bounds);
-              },
-              child: Icon(
-                icon,
-                color: Colors.white,
-                size: 35,
+        // shadowColor: Colors.grey.shade300,
+        elevation: 5.0,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ShaderMask(
+                shaderCallback: (Rect bounds) {
+                  return LinearGradient(
+                    colors: <Color>[
+                      x1,
+                      x2,
+                    ],
+                  ).createShader(bounds);
+                },
+                child: Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 35,
+                ),
               ),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 2),
-              child: Text(
-                text,
-                textAlign: TextAlign.center,
+              SizedBox(
+                height: 5,
               ),
-            ),
-          ],
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 2),
+                child: Text(
+                  text,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -189,7 +198,7 @@ class _UserDetailsState extends State<UserDetails> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Color(0xff050A30),
-                            fontSize: 25,
+                            fontSize: 28,
                           ),
                         ),
                       ),
@@ -203,28 +212,37 @@ class _UserDetailsState extends State<UserDetails> {
                               ),
                               style: TextStyle(
                               color: Colors.grey.shade800,
-                              fontSize: 15,
+                              fontSize: 16,
                             ),
                         ),
                       ),
-                      Text(snapshot.data!.gender,
-                      style: TextStyle(
-                            color: Colors.grey.shade800,
-                            fontSize: 15,
-                          ),
+                      GestureDetector(
+                         onTap: () async {
+                             String mailUrl = 'mailto:' + snapshot.data!.email;
+                          await launch(mailUrl);
+                        },
+                        child: Text(snapshot.data!.email,
+                        
+                        style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Colors.grey.shade900,
+                              fontSize: 14,
+                            ),
+                        ),
                       ),
                       GridView.count(
                         shrinkWrap: true,
                         padding: const EdgeInsets.all(20),
-                        childAspectRatio: 1.8,
+                        childAspectRatio: 1.7,
                         crossAxisSpacing: 15,
                         mainAxisSpacing: 10,
                         crossAxisCount: 2,
                         children: [
                           detailCard(Icons.place, Color(0xff1f4037),
                               Color(0xff99f2c8), snapshot.data!.country),
-                          detailCard(Icons.mail, Color(0xffF09819),
-                              Color(0xffEDDE5D), snapshot.data!.email),
+                              
+                          detailCard(Icons.person, Color(0xffF09819),
+                              Color(0xffEDDE5D), snapshot.data!.gender,),
                           detailCard(Icons.phone, Color(0xffF09819),
                               Color(0xffEDDE5D), snapshot.data!.phone),
                           detailCard(
